@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подорожі Україною</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        main {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: slideDown 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: slideUp 1s ease 0.3s both;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+
+        .card p {
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: white;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.3);
+        }
+
+        .about-content {
+            color: white;
+            padding: 2rem 0;
+        }
+
+        .about-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #ffd700;
+        }
+
+        .about-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .success-message {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+            color: #4caf50;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-element" style="width: 60px; height: 60px; top: 20%; left: 10%; animation-delay: 0s;"></div>
+        <div class="floating-element" style="width: 40px; height: 40px; top: 60%; right: 20%; animation-delay: 2s;"></div>
+        <div class="floating-element" style="width: 80px; height: 80px; top: 40%; left: 80%; animation-delay: 4s;"></div>
+    </div>
+
+    <header>
+        <nav class="container">
+            <div class="logo">🇺🇦 УкраїнаТур</div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showPage('home')" class="active">Головна</a></li>
+                <li><a href="#" onclick="showPage('destinations')">Напрямки</a></li>
+                <li><a href="#" onclick="showPage('contact')">Контакти</a></li>
+            </ul>
+            <div class="mobile-menu">☰</div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Головна сторінка -->
+        <div id="home" class="page active">
+            <section class="hero">
+                <h1>Відкрий красу України</h1>
+                <p>Подорожуй найкрасивішими місцями нашої країни та створюй незабутні спогади</p>
+                <a href="#" class="cta-button" onclick="showPage('destinations')">Обрати маршрут</a>
+            </section>
+
+            <div class="about-content">
+                <h2>Про наші подорожі</h2>
+                <p class="about-text">
+                    Україна - це країна з неймовірно багатою історією, культурою та природою. 
+                    Від карпатських вершин до чорноморського узбережжя, від стародавніх замків 
+                    до сучасних міст - кожен куточок нашої Батьківщини має свою унікальну красу та історію.
+                </p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">🏔️</div>
+                        <h3>Карпати</h3>
+                        <p>Мальовничі гори, чисте повітря та неймовірні краєвиди</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🏰</div>
+                        <h3>Історичні пам'ятки</h3>
+                        <p>Стародавні замки, церкви та музеї</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🌊</div>
+                        <h3>Морське узбережжя</h3>
+                        <p>Золоті пляжі Чорного та Азовського морів</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Сторінка напрямків -->
+        <div id="destinations" class="page">
+            <section class="hero">
+                <h1>Популярні напрямки</h1>
+                <p>Оберіть своє ідеальне місце для подорожі</p>
+            </section>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3>🏔️ Карпатські гори</h3>
+                    <p>Насолоджуйтесь чистим гірським повітрям, мальовничими озерами та автентичними гуцульськими селами. Ідеальне місце для активного відпочинку та екотуризму.</p>
+                    <p><strong>Що побачити:</strong> Говерла, озеро Синевир, Буковель, Яремче</p>
+                    <p><strong>Найкращий час:</strong> Червень-Вересень, Грудень-Березень</p>
+                </div>
+
+                <div class="card">
+                    <h3>🏰 Львів - культурна столиця</h3>
+                    <p>Прогуляйтеся середньовічними вуличками, скуштуйте найкращу каву в Україні та відчуйте неповторну атмосферу європейського міста.</p>
+                    <p><strong>Що побачити:</strong> Площа Ринок, Львівська опера, Високий замок, кав'ярні</p>
+                    <p><strong>Найкращий час:</strong> Травень-Вересень</p>
+                </div>
+
+                <div class="card">
+                    <h3>🌊 Одеса - перлина моря</h3>
+                    <p>Відпочивайте на золотих пляжах, насолоджуйтесь морськими делікатесами та відкривайте для себе унікальну одеську культуру та гумор.</p>
+                    <p><strong>Що побачити:</strong> Дерибасівська, Потьомкінські сходи, пляжі, катакомби</p>
+                    <p><strong>Найкращий час:</strong> Травень-Жовтень</p>
+                </div>
+
+                <div class="card">
+                    <h3>🏛️ Київ - серце України</h3>
+                    <p>Досліджуйте столицю з її золотими куполами, стародавньою історією та сучасними розвагами. Місто, де минуле зустрічається з майбутнім.</p>
+                    <p><strong>Що побачити:</strong> Софія Київська, Лавра, Майдан, Андріївський узвіз</p>
+                    <p><strong>Найкращий час:</strong> Квітень-Жовтень</p>
+                </div>
+
+                <div class="card">
+                    <h3>🌅 Закарпаття</h3>
+                    <p>Відкрийте для себе край виноградників, термальних джерел та багатонаціональної культури. Тут кожне село має свою унікальну традицію.</p>
+                    <p><strong>Що побачити:</strong> Ужгородський замок, Мукачево, термальні басейни</p>
+                    <p><strong>Найкращий час:</strong> Травень-Жовтень</p>
+                </div>
+
+                <div class="card">
+                    <h3>🏞️ Подільські Товтри</h3>
+                    <p>Унікальна природна пам'ятка з мальовничими каньонами, стародавніми печерами та найдовшим гіпсовим лабіринтом у світі.</p>
+                    <p><strong>Що побачити:</strong> Кам'янець-Подільський, Хотинська фортеця, печери</p>
+                    <p><strong>Найкращий час:</strong> Квітень-Жовтень</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Сторінка контактів -->
+        <div id="contact" class="page">
+            <section class="hero">
+                <h1>Зв'яжіться з нами</h1>
+                <p>Плануйте свою неповторну подорож разом з нами</p>
+            </section>
+
+            <div class="form-container">
+                <div class="success-message" id="successMessage">
+                    ✅ Дякуємо! Ваше повідомлення надіслано. Ми зв'яжемося з вами найближчим часом!
+                </div>
+
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Ім'я *</label>
+                        <input type="text" id="name" name="name" required placeholder="Введіть ваше ім'я">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required placeholder="your@email.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Телефон</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+38 (XXX) XXX-XX-XX">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="destination">Цікавий напрямок</label>
+                        <select id="destination" name="destination">
+                            <option value="">Оберіть напрямок</option>
+                            <option value="carpathians">Карпатські гори</option>
+                            <option value="lviv">Львів</option>
+                            <option value="odesa">Одеса</option>
+                            <option value="kyiv">Київ</option>
+                            <option value="transcarpathia">Закарпаття</option>
+                            <option value="podolia">Подільські Товтри</option>
+                            <option value="other">Інший</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dates">Бажані дати подорожі</label>
+                        <input type="text" id="dates" name="dates" placeholder="наприклад: червень 2025">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Повідомлення</label>
+                        <textarea id="message" name="message" rows="5" placeholder="Розкажіть нам про ваші побажання, кількість осіб, особливі вимоги..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Надіслати запит</button>
+                </form>
+            </div>
+
+            <div class="about-content">
+                <h2>Наші контакти</h2>
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">📞</div>
+                        <h3>Телефон</h3>
+                        <p>+38 (044) 123-45-67<br>+38 (063) 987-65-43</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✉️</div>
+                        <h3>Email</h3>
+                        <p>info@ukrainetur.com<br>tours@ukrainetur.com</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">📍</div>
+                        <h3>Адреса</h3>
+                        <p>м. Київ<br>вул. Хрещатик, 25<br>офіс 301</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🕒</div>
+                        <h3>Робочі години</h3>
+                        <p>Пн-Пт: 9:00-18:00<br>Сб: 10:00-16:00<br>Нд: вихідний</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Навігація між сторінками
+        function showPage(pageId) {
+            // Сховати всі сторінки
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Показати обрану сторінку
+            document.getElementById(pageId).classList.add('active');
+            
+            // Оновити активний пункт меню
+            const links = document.querySelectorAll('.nav-links a');
+            links.forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Прокрутити на початок
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Обробка форми контактів
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Симуляція надсилання форми
+            const submitBtn = document.querySelector('.submit-btn');
+            const successMessage = document.getElementById('successMessage');
+            
+            submitBtn.textContent = 'Надсилаємо...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                successMessage.style.display = 'block';
+                submitBtn.textContent = 'Надіслано!';
+                submitBtn.style.background = 'linear-gradient(45deg, #4caf50, #45a049)';
+                
+                // Очистити форму
+                this.reset();
+                
+                setTimeout(() => {
+                    submitBtn.textContent = 'Надіслати запит';
+                    submitBtn.disabled = false;
+                    submitBtn.style.background = 'linear-gradient(45deg, #4ecdc4, #44a08d)';
+                    successMessage.style.display = 'none';
+                }, 3000);
+            }, 2000);
+        });
+
+        // Анімація заголовка при прокручуванні
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(255, 255, 255, 0.15)';
+                header.style.backdropFilter = 'blur(15px)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.1)';
+                header.style.backdropFilter = 'blur(10px)';
+            }
+        });
+
+        // Анімація появи карток при прокручуванні
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Застосувати спостерігач до карток
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s ease';
+                observer.observe(card);
+            });
+        });
+
+        // Мобільне меню (базова функціональність)
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Додати деякі інтерактивні ефекти
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) rotateX(5deg)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) rotateX(0deg)';
+            });
+        });
+
+        // Додати ефект парралакс для фонових елементів
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelectorAll('.floating-element');
+            
+            parallax.forEach((element, index) => {
+                const speed = (index + 1) * 0.5;
+                element.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
+            });
+        });
+    </script>
+</body>
+</html>
