@@ -1,2 +1,15 @@
-FROM nginx:alpine
-COPY ./site /usr/share/nginx/html
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+RUN mkdir -p templates
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]

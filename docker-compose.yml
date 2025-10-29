@@ -1,20 +1,39 @@
-version: '3.9'
+version: '3.8'
 
 services:
   web:
     build: .
-    container_name: lab3-web
     ports:
-      - "8080:80"
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
-      - ./site:/usr/share/nginx/html
+      - .:/app
+    networks:
+      - app-network
 
   db:
-    image: mysql:8.0
-    container_name: lab3-db
-    restart: always
+    image: postgres:15
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: lab3db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: pass
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
